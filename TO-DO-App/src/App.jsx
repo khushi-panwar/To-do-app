@@ -50,7 +50,7 @@ const App = () => {
   }
 
   const toggleComplete = (indexToToggle) => {
-    setTodo(prev => prev.map((item, index) => index === indexToToggle? {...item , completed: true} : item));
+    setTodo(prev => prev.map((item, index) => index === indexToToggle? {...item , completed: !item.completed} : item));
 
   }
 

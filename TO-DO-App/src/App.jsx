@@ -1,34 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// Your features:
+// Add Todo
+// Delete Todo
+// Edit Todo
+// Mark Todo Completed (strike-through)
+// Each TodoCard has its own internal counter (like your previous task)
+// Everything must be split into:
+//      App.jsx
+//      TodoInput.jsx
+//      TodoList.jsx
+//      TodoCard.jsx
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useState } from "react"
+import TodoInput from "./Components/TodoInput";
+import TodoList from "./Components/TodoList";
+
+const App = () => {
+  const [toDo, setTodo] = useState([{ text: "Coding", completed: false }]); // all data in one 
+  const [currentTodo, setCurrentTodo] = useState("") // to get data from input
+  const [editIndex, setEditIndex] = useState(null);// for edit - need index
+
+  //  add/update functionality
+  const addOrUpdateTodo = () => {
+    const trimmentTodo = currentTodo.trim();
+    if ( trimmentTodo === "") {
+      alert(" No tasks available. Add something!")
+      return ;
+    }
+    //no duplicate to be allowed
+    const isDuplicate = toDo.some((item, index) => item.text.toLowerCase() === trimmentTodo.toLowerCase() && index != editIndex)
+
+     if (isDuplicate) {
+    alert("This task already exists!");
+    return;
+    }
+
+
+    // update todo 
+    if (editIndex !== null) {
+      setTodo(prev => prev.map((item, index) => index === editIndex ? { ...item, text: trimmentTodo } : item)
+      )
+      setEditIndex(null); // reset edit mode
+      setCurrentTodo(""); // clear input
+      return;
+    }
+
+    // add todo
+    setTodo(prev => [...prev, { text: trimmentTodo, completed: false }]);
+    setCurrentTodo(""); // clearing input         
+  }
+
+  const toggleComplete = (indexToToggle) => {
+    setTodo(prev => prev.map((item, index) => index === indexToToggle? {...item , completed: true} : item));
+
+  }
+
+  const deleteTodo = (itemToDelete) => {
+    setTodo(prev => prev.filter(item => item !== itemToDelete))
+  }
+
+  const editTodo = (item, index) => {
+    setEditIndex(index);
+    setCurrentTodo(item.text);//show selected one in input to edit     
+  }
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="w-100%" >
+      <TodoInput
+        currentTodo={currentTodo}
+        setCurrentTodo={setCurrentTodo}
+        addOrUpdateTodo={addOrUpdateTodo}
+        isEdit={editIndex !== null}
+      />
+
+      <TodoList
+        toDos={toDo}
+        deleteTodo={deleteTodo}
+        editTodo={editTodo}
+        toggleComplete={toggleComplete}
+      />
+
+
+    </div>
   )
 }
 

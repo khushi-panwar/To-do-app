@@ -13,7 +13,7 @@ const TodoCard = ({ item, index, editTodo, deleteTodo, toggleComplete }) => {
                 <button className="border rounded-xl px-2 py-2 w-18 hover:bg-pink-300"
                 onClick={() => { editTodo(item, index) }}>edit</button>
             <button className="border rounded-xl px-2 py-2 w-18 hover:bg-pink-300"
-                onClick={() => { deleteTodo(item) }}>delete</button>
+                onClick={() => { deleteTodo(index) }}>delete</button>
             </div>
 
         </div>

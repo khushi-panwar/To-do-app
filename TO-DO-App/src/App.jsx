@@ -54,8 +54,8 @@ const App = () => {
 
   }
 
-  const deleteTodo = (itemToDelete) => {
-    setTodo(prev => prev.filter(item => item !== itemToDelete))
+  const deleteTodo = (indexToDelete) => {
+    setTodo(prev => prev.filter(item, index => index !== indexToDelete))
   }
 
   const editTodo = (item, index) => {
